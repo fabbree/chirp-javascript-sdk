@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+<head>
+    <title>Chirp JavaScript SDK Demo 1.0.0</title>
+    <link rel="stylesheet" href="styles/main.css"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,600" rel="stylesheet" />
+    <meta charset="utf-8" />
+</head>
+<body>
+    <div id="main">
+        <h1>Chirp JavaScript SDK Demo</h1>
+        <p id="version">Version: <strong>1.0.0</strong></p>
+        <div id="status">Status: <span id="statusInner">Authenticating</span></div>
+
+        <div id="buttons">
+            <a onclick="return playChirp('parrotbill');" href="#">Play Chirp</a>
+            <a onclick="return playOfflineChirp('parrotbilllllahcm4');" href="#">Play Chirp (offline)</a>
+            <a onclick="return createChirp();" href="#">Create Chirp with associated data</a>
+            <a onclick="return getChirp('parrotbill');" href="#">Get Chirp associated data</a>
+            <a onclick="return encodeChirp('parrotbill');" href="#">Encode Chirp identifier</a>
+        </div>
+
+        <div id="results"></div>
+
+        <script src="js/chirpjs.min.js"></script>
+    </div>
+
+    <div id="footer">
+        <p>
+            Copyright &copy; 2016 Asio Ltd.<br />
+            <a href="http://developers.chirp.io/">Chirp Developers Hub</a><br /><br />
+            <a id="chester" onclick="return playChirp('0123456789dvnii64q');" href="#"><img src="chester.png" width="24" alt="•v•" /></a>
+        </p>
+    </div>
+</body>
+<script>
+
+    if (window.location.href.indexOf('file://') !== -1) {
+        window.alert('To use the Chirp SDK, web content must be served from an HTTP server, not opened from the file system. Look at the included README for instructions on getting started.');
+    }
+
+    var result = document.getElementById("results");
+    var authStatus = document.getElementById("statusInner");
+
+    /**------------------------------------------------------------------------
+     * Create a new instance of Chirpjs
+     * Replace `YOUR_APP_KEY` with your application's key.
+     * At this point, `Chirpjs` will automatically try to authenticate your application.
+     * To catch the authentication response, you can pass a callback function as a second argument.
+     *------------------------------------------------------------------------*/
+    var chirpjs = new Chirpjs("YOUR_APP_KEY", function (err, data) {
+        if (err) {
+            console.error(err);
+            authStatus.innerHTML = String(err);
+        }
+        else {
+            console.log("Authenticated OK.");
+            authStatus.innerHTML = "Authenticated";
+        }
+    });
+
+    /**
+     * ===> Create a Chirp <===
+     * After the application is successfully authenticated, you can start creating new chirps.
+     * The function below creates a chirp with associated JSON data, with key `foo` and value `bar`.
+     **/
+    function createChirp() {
+        chirpjs.create({foo: 'bar'}, function(err, chirp) {
+            if (err) {
+                showMessage(String(err), true);
+            }
+            showMessage('Created new chirp: ' + chirp.shortcode + ' <a class="button" href="#" onclick="return playChirp(\'' + chirp.shortcode + '\');">Play</a>');
+        });
+        return false;
+    }
+
+    /**
+     * ===> Play a Chirp <===
+     * The response contains two identifiers, the `shortcode` and `longcode`.
+     * The `longcode` represents the `shortcode` with error-correction symbols appended, preparing it for audio playback.
+     * If you want to play a chirp in **offline** mode, you can play the `longcode` directly.
+     **/
+    function playOfflineChirp(longcode) {
+        chirpjs.chirp(longcode, function(err, chirp) {
+            if (err) {
+                showMessage(String(err), true);
+            }
+            else {
+                showMessage("Finished playing chirp: " + chirp, false);
+            }
+        });
+        return false;
+    }
+    /**
+     *You can also pass the `shortcode` directly.
+     * However, in this case, you'll need an internet connection so that the SDK is able to add error correction to the `shortcode`.
+     * There will be a brief delay whilst the client contacts the server to obtain the error correction characters.
+     **/
+    function playChirp(shortcode) {
+        chirpjs.chirp(shortcode, function(err, chirp) {
+            if (err) {
+                showMessage(String(err), true);
+            }
+            else {
+                showMessage("Finished playing chirp: " + chirp, false);
+            }
+        });
+        return false;
+    }
+
+    /** ===> Get a Chirp <===
+     * To get the data that was attached to your chirp, you can retrieve it based on the `shortcode`.
+     **/
+    function getChirp(shortcode) {
+        chirpjs.get(shortcode, function(err, data){
+            if (err) {
+                showMessage(String(err), true);
+            }
+            else {
+                showMessage("Read associated data: " + JSON.stringify(data, null, 4), false);
+            }
+        });
+        return false;
+    }
+
+    /**
+     * ===> Encode a Chirp <===
+     * You can also encode your own `shortcode`, which should be 10 characters in length
+     * (see [Anatomy of a Chirp](http://developers.chirp.io/v1/docs/chirps-shortcodes)).
+     **/
+    function encodeChirp(shortcode) {
+        chirpjs.encode(shortcode, function(err, longcode){
+            if (err) {
+                showMessage(String(err), true);
+            }
+            else {
+                showMessage("Encoded chirp: " + longcode + ' <a class="button" href="#" onclick="return playChirp(\'' + longcode + '\');">Play</a>', false);
+            }
+        });
+        return false;
+    }
+
+    function showMessage(message, isError) {
+        if (isError) {
+            result.innerHTML = "<div class='result error'>" + message + "</div>" + result.innerHTML;
+            console.error(message);
+        } else {
+            result.innerHTML = "<div class='result'>" + message + "</div>" + result.innerHTML;
+            console.info(message);
+        }
+    }
+</script>
+</html>
