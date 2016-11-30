@@ -1,0 +1,24 @@
+{
+  "name": "chirpsdk",
+  "version": "1.0.0",
+  "description": "The Chirp SDK for JavaScript allows you to send chirps from within your website or JavaScript project",
+  "main": "sdk/chirpjs.min.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chirp/chirp-javascript-sdk.git"
+  },
+  "keywords": [
+    "chirp.io",
+    "chirpio",
+    "chirp",
+    "javascript",
+    "chirpsdk"
+  ],
+  "author": "chirp.io",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/chirp/chirp-javascript-sdk/issues"
+  },
+  "homepage": "https://github.com/chirp/chirp-javascript-sdk#readme"
+}
