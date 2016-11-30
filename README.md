@@ -1,4 +1,4 @@
-# Chirp JavaScript SDK 1.0.0
+# Chirp JavaScript SDK 1.1.0
 
 The Chirp SDK for JavaScript allows you to send chirps from within your website or JavaScript project. It uses the Web Audio API to generate chirps natively within the browser, played from the visitor's speaker.
 
@@ -75,7 +75,7 @@ var chirpjs = new Chirpjs("YOUR_APP_KEY", function(err, res) {
 After the application is successfully authenticated, you can start creating new chirps.  
 The example below creates a chirp with associated JSON data, with key `foo` and value `bar`. 
 The response format is detailed on the Chirp API [POST /chirp documentation](http://developers.chirp.io/v2/docs/api-post-chirp)
-
+NOTE: The term `shortcode` has been deprecated, in favour of referring to individual chirps by their `identifier`.
 ```
 chirpjs.create({foo: 'bar'}, function(err, chirp) {
    if (err) {
@@ -87,11 +87,11 @@ chirpjs.create({foo: 'bar'}, function(err, chirp) {
 
 ### 4. Play a Chirp
 
-The response contains two identifiers, the `shortcode` and `longcode`. 
-The `longcode` represents the `shortcode` with error-correction symbols appended, preparing it for audio playback. 
-If you want to play a chirp in **offline** mode, you can play the `longcode` directly.
+The response contains two identifiers, the `identifier` and `identifierEncoded`. 
+The `identifierEncoded` represents the `identifier` with error-correction symbols appended, preparing it for audio playback. 
+If you want to play a chirp without a network connection, you can play the `identifierEncoded` directly.
 
-> For more information about `shortcodes` and `longcodes`, see [Anatomy of a Chirp](http://developers.chirp.io/v1/docs/chirps-shortcodes).
+> For more information about identifiers and their encodings, see [Anatomy of a Chirp](http://developers.chirp.io/v1/docs/chirps-shortcodes).
 
 ```
 chirpjs.chirp("kingfishereru8acg7", function(err, data) {
@@ -102,8 +102,9 @@ chirpjs.chirp("kingfishereru8acg7", function(err, data) {
 });
 ```
 
-You can also pass the `shortcode` directly. 
-However, in this case, you'll need an internet connection so that the SDK is able to add error correction to the `shortcode`. There will be a brief delay whilst the client contacts the server to obtain the error correction characters. 
+You can also pass the `identifier` directly. 
+
+However, in this case, you'll need an internet connection so that the SDK is able to add error correction to the `identifier`. There will be a brief delay whilst the client contacts the server to obtain the error correction characters. 
 
 ```
 chirpjs.chirp("kingfisher", function(err, data) {
@@ -115,11 +116,11 @@ chirpjs.chirp("kingfisher", function(err, data) {
 ```
 
 ### 5. Get a Chirp
-To get the data that was attached to your chirp, you can retrieve it based on the `shortcode`.
+To get the data that was attached to your chirp, you can retrieve it based on the `identifier`.
 
 ```
-chirpjs.get("shortcode", function(err, data){
-		if (err) {
+chirpjs.get("identifier", function(err, data){
+   if (err) {
       console.error(err); return;
    };
    console.info(data);
@@ -127,16 +128,54 @@ chirpjs.get("shortcode", function(err, data){
 ```
 
 ### 6. Encode a Chirp
-You can also encode your own `shortcode`, 
+You can also encode your own `identifier`, 
 which should be 10 characters in length (see [Anatomy of a Chirp](http://developers.chirp.io/v1/docs/chirps-shortcodes)).
 
 ```
-chirpjs.encode("shortcode", function(err, longcode){
-		if (err) {
+chirpjs.encode("identifier", function(err, identifierEncoded){
+   if (err) {
       console.error(err); return;
    };
-   console.info(longcode);
+   console.info(identifierEncoded);
 });
+```
+
+### 7. Set Protocol
+
+The Chirp JavaScript SDK is capable of sending chirps in two different [protocols](http://developers.chirp.io/docs/chirp-protocols): **standard**, audible 50-bit chirps, and **ultrasonic**, inaudible 32-bit chirps. To toggle between the two:
+
+```
+chirpjs.setProtocolNamed("ultrasonic"); // to switch to the ultrasonic protocol
+chirpjs.setProtocolNamed("standard"); // to switch to the standard protocol (default)
+```
+
+[Read more about Chirp protocols](http://developers.chirp.io/docs/chirp-protocols).
+
+### 8. Play an Ultrasonic Chirp
+
+The ultrasonic protocol has a different carrying capacity to standard chirps, and so uses identifiers of a slightly different format. Ultrasonic identifiers are 8 characters long, from the hex alphabet `0-9a-f`.
+
+Similar to "standard" chirps, if you have an internet connection, you can simply pass the unencoded identifier to the `chirp` function. This will add the encoding and play it from the device's speaker.
+
+```
+var identifier = "3210567f";
+chirpjs.setProtocolNamed("ultrasonic");
+chirpjs.chirp(identifier);
+```
+
+Alternatively, you can call the `encode` method to add error encoding to the identifier, and then store the `identifierEncoded` to play offline later on.
+
+```
+var identifier = "3210567f";
+chirpjs.encode(identifier, function(err, identifierEncoded){
+   if (err) {
+      console.error(err); return;
+   };
+   console.info(identifierEncoded);
+   // ... potentially later in your code ...
+   chirpjs.chirp(identifierEncoded);
+});
+
 ```
 
 ## Further Information

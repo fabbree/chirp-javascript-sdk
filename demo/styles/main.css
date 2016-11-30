@@ -5,8 +5,22 @@
  * All rights reserved.
  *------------------------------------------------------------------------*/
 
+@font-face {
+  font-family: 'Calibre Regular';
+  src: url('fonts/CalibreRegular.woff2') format('woff2'),
+  url('fonts/CalibreRegular.woff') format('woff'),
+  url('fonts/CalibreRegular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'MarkPro Medium';
+  src: url('fonts/MarkPro-Medium.woff2') format('woff2'),
+  url('fonts/MarkPro-Medium.woff') format('woff'),
+  url('fonts/MarkPro-Medium.ttf') format('truetype');
+}
+
 body {
-  font-family: "Work Sans", Avenir, Helvetica, Arial, sans-serif;
+  /*font-family: "Work Sans", Avenir, Helvetica, Arial, sans-serif;*/
   -webkit-font-smoothing: antialiased;
   text-align: center;
   padding: 0px;
@@ -14,6 +28,15 @@ body {
   font-size: 90%;
   line-height: 1.3em;
   background: #eee;
+  color: #190e2b;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: Calibre Regular;
+  background: #fff;
+}
+
+h1, h2, h3, h4 {
+  font-family: MarkPro Medium;
 }
 
 h1 {
@@ -26,13 +49,10 @@ h1 * {
   vertical-align: middle;
 }
 
-a {
-  color: #3ac;
-}
-
 #main {
   background: #fff;
   padding: 40px;
+  margin-bottom: 180px;
 }
 
 #version {
@@ -41,11 +61,12 @@ a {
 
 #status {
   display: inline-block;
-  padding: 10px 15px;
+  padding: 17px 22px 14px;
   text-decoration: none;
   color: #fff;
+  font-size: 17px;
   margin: 10px 10px 10px;
-  background: #bbb;
+  background: #2c2140;
 }
 
 #status span {
@@ -53,22 +74,18 @@ a {
 }
 
 
-#buttons a, a.button {
+.buttons a, a.button {
   display: inline-block;
-  padding: 10px 15px;
+  padding: 17px 22px 14px;
   text-decoration: none;
-  font-weight: 600;
-  color: #fff;
+  color: #190e2b;
+  font-size: 17px;
   margin: 10px;
-  background: #3ac; /* For browsers that do not support gradients */
+  background: #ffd458;
 }
 
 #results .button {
   margin: 0 10px;
-}
-
-#buttons a:hover, a.button:hover {
-  background: #5cf;
 }
 
 #results {
@@ -94,18 +111,119 @@ a {
 }
 
 #footer {
-  padding: 40px;
-  font-size: 90%;
-  color: #777;
+  font-family: Calibre Regular;
+  background: #190e2b;
+  color: #fff;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  height: 150px;
+  padding-top: 30px;
 }
 
-#chester {
-  opacity: 0.3;
+#footer a {
+  color: #fff;
 }
 
 #chester:hover {
   opacity: 0.7;
 }
+
+/* ============================================================
+  Ultrasonic switch
+============================================================ */
+
+#setProtocolButtons {
+  display: none;
+}
+.switch {
+  display: inline-block;
+}
+
+.switch h2,
+.switch  label {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+switch h2 {
+  margin: 0 15px;
+  display: inherit;
+}
+
+.cmn-toggle {
+  position: absolute;
+  margin-left: -9999px;
+  visibility: hidden;
+}
+.cmn-toggle + label {
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* ============================================================
+  SWITCH 1 - ROUND
+============================================================ */
+input.cmn-toggle-round + label {
+  padding: 2px;
+  width: 60px;
+  height: 30px;
+  background-color: #dddddd;
+  -webkit-border-radius: 60px;
+  -moz-border-radius: 60px;
+  -ms-border-radius: 60px;
+  -o-border-radius: 60px;
+  border-radius: 60px;
+}
+input.cmn-toggle-round + label:before, input.cmn-toggle-round + label:after {
+  display: block;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  bottom: 1px;
+  content: "";
+}
+input.cmn-toggle-round + label:before {
+  right: 1px;
+  background-color: #f1f1f1;
+  -webkit-border-radius: 60px;
+  -moz-border-radius: 60px;
+  -ms-border-radius: 60px;
+  -o-border-radius: 60px;
+  border-radius: 60px;
+  -webkit-transition: background 0.4s;
+  -moz-transition: background 0.4s;
+  -o-transition: background 0.4s;
+  transition: background 0.4s;
+}
+input.cmn-toggle-round + label:after {
+  width: 32px;
+  background-color: #fff;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  -ms-border-radius: 100%;
+  -o-border-radius: 100%;
+  border-radius: 100%;
+  -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  -webkit-transition: margin 0.4s;
+  -moz-transition: margin 0.4s;
+  -o-transition: margin 0.4s;
+  transition: margin 0.4s;
+}
+input.cmn-toggle-round:checked + label:before {
+  background-color: #2c2140;
+}
+input.cmn-toggle-round:checked + label:after {
+  margin-left: 30px;
+}
+
 
 @media screen and (max-width: 480px)
 {
