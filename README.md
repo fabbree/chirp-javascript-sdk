@@ -41,28 +41,28 @@ Finally, go to [localhost:8000](http://localhost:8000/). Voila! You're chirping.
 
 We'll now take you through installing the JavaScript SDK within your own project.
 
-### 1. Include the file `chirpjs.min.js` within your project.
+### 1. Include the file `chirpSDK.min.js` within your project.
 
-Copy `chirpjs.min.js` to your project folder, and include it within your HTML:
+Copy `chirpSDK.min.js` to your project folder, and include it within your HTML:
 
 ```
-<script src="chirpjs.min.js"></script>
+<script src="chirpSDK.min.js"></script>
 ```
 
-### 2. Create a new instance of `Chirpjs` with your application key.
+### 2. Create a new instance of `ChirpSDK` with your application key.
 
 Replace `YOUR_APP_KEY` with your application's key.
 
 ```
-var chirpjs = new Chirpjs("YOUR_APP_KEY");
+var chirpjs = new ChirpSDK("YOUR_APP_KEY");
 ```
 
-At this point, `Chirpjs` will automatically try to authenticate your application. 
+At this point, `ChirpSDK` will automatically try to authenticate your application. 
 
 To catch the authentication response, you can pass a callback function as a second argument.
 
 ```
-var chirpjs = new Chirpjs("YOUR_APP_KEY", function(err, res) {
+var chirpjs = new ChirpSDK("YOUR_APP_KEY", function(err, res) {
     if (err) {
         console.error(err); return;
     }
