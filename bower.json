@@ -1,0 +1,23 @@
+{
+  "name": "chirpsdk",
+  "homepage": "https://github.com/chirp/chirp-javascript-sdk",
+  "authors": [
+    "developers@chirp.io"
+  ],
+  "description": "The Chirp SDK for JavaScript allows you to send chirps from within your website or JavaScript project.",
+  "main": "sdk/chirpjs.min.js",
+  "keywords": [
+    "chirp.io",
+    "chirpio",
+    "chirp",
+    "javascript"
+  ],
+  "license": "Apache-2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
